@@ -3,6 +3,10 @@ name: "dataUpdate"
 on:
   schedule:
     - cron: '0 23 * * *'
+
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
