@@ -1,0 +1,31 @@
+name: "ghNoaiUpdate"
+
+on:
+  schedule:
+    - cron: "0 22 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup nu
+        uses: hustcer/setup-nu@v3
+        with:
+          version: 0.110.0
+      - name: Update Data
+        run: |
+          nu gh_noai_ts.nu
+          nu gh_noai_go.nu
+      - name: setting git
+        run: |
+          git config --local user.email ${{ secrets.EMAIL }}
+          git config --local user.name "KamekureMaisuke"
+          git add .
+          git commit -m "update gh_noai_data $(date '+%Y%m%d')"
+          git push origin main
