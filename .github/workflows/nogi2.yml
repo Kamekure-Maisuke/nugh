@@ -1,11 +1,17 @@
-name: ci
+name: nogi
+
 on:
-  push:
-    branches-ignore:
-      - main
+  schedule:
+    - cron: "0 19 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v6
         with:
@@ -27,4 +33,11 @@ jobs:
             <(cut -f2 data/members_nogi.tsv | sudachipy | grep '姓' | cut -f1 | shuf | \
               head -n $(cut -f2 data/members_nogi.tsv | sudachipy | grep '人名,名' | cut -f1 | wc -l)) \
             <(cut -f2 data/members_nogi.tsv | sudachipy | grep '人名,名' | cut -f1 | shuf) | \
-          head -n 10
+          head -n 10 > "data/members_nogi_random_$(date '+%Y%m%d')"
+      - name: setting git
+        run: |
+          git config --local user.email ${{ secrets.EMAIL }}
+          git config --local user.name "KamekureMaisuke"
+          git add .
+          git commit -m "update nogi_random_data $(date '+%Y%m%d')"
+          git push origin main
