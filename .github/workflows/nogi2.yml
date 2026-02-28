@@ -22,4 +22,9 @@ jobs:
           uv tool run --from sudachipy pip install sudachidict-core
 
       - name: output
-        run: echo "白石麻衣" | sudachipy
+        run: |
+          paste \
+            <(cut -f2 data/members_nogi.tsv | sudachipy | grep '姓' | cut -f1 | shuf | \
+              head -n $(cut -f2 data/members_nogi.tsv | sudachipy | grep '人名,名' | cut -f1 | wc -l)) \
+            <(cut -f2 data/members_nogi.tsv | sudachipy | grep '人名,名' | cut -f1 | shuf) | \
+          head -n 10
