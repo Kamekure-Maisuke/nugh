@@ -1,8 +1,9 @@
 name: ci
+
 on:
-  push:
-    branches-ignore:
-      - main
+  schedule:
+    - cron: "0 19 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -21,4 +22,11 @@ jobs:
           sudo mv /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd /var/lib/mecab/dic/
           sudo sed -i 's/debian/mecab-ipadic-neologd/' /etc/mecabrc
       - name: create member data
-        run: paste <(cut -f2 data/members_nogi.tsv | mecab -d /var/lib/mecab/dic/ipadic-utf8 | grep '姓' | cut -f1 | shuf | head -n $(cut -f2 data/members_nogi.tsv | mecab -d /var/lib/mecab/dic/ipadic-utf8 | grep '人名,名' | cut -f1 | wc -l))   <(cut -f2 data/members_nogi.tsv | mecab -d /var/lib/mecab/dic/ipadic-utf8 | grep '人名,名' | cut -f1 | shuf) | head -n 10
+        run: paste <(cut -f2 data/members_nogi.tsv | mecab -d /var/lib/mecab/dic/ipadic-utf8 | grep '姓' | cut -f1 | shuf | head -n $(cut -f2 data/members_nogi.tsv | mecab -d /var/lib/mecab/dic/ipadic-utf8 | grep '人名,名' | cut -f1 | wc -l))   <(cut -f2 data/members_nogi.tsv | mecab -d /var/lib/mecab/dic/ipadic-utf8 | grep '人名,名' | cut -f1 | shuf) | head -n 10 > "data/members_nogi_random_$(date '+%Y%m%d')"
+      - name: setting git
+        run: |
+          git config --local user.email ${{ secrets.EMAIL }}
+          git config --local user.name "KamekureMaisuke"
+          git add .
+          git commit -m "update gh_noai_data $(date '+%Y%m%d')"
+          git push origin main
