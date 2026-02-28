@@ -20,5 +20,5 @@ jobs:
           sudo /tmp/neologd/bin/install-mecab-ipadic-neologd -n -y
           sudo mv /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd /var/lib/mecab/dic/
           sudo sed -i 's/debian/mecab-ipadic-neologd/' /etc/mecabrc
-      - name: mecab version
-        run: mecab -V
+      - name: create member data
+        run: cut -f1 data/members_nogi.tsv | mecab -O yomi
