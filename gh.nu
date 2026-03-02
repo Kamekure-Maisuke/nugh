@@ -1,7 +1,7 @@
 let since = (date now) - 4wk | format date "%Y-%m-%d"
 let filename = (date now | format date "%Y%m%d") + "_gh_trend.tsv"
 
-let languages = ["javascript", "typescript", "python", "go"]
+let languages = ["javascript", "typescript", "python", "go", "vue"]
 
 $languages | par-each { |lang|
     mkdir $"data/($lang)"
