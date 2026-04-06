@@ -17,7 +17,8 @@ let filtered = $repos | where { |repo|
     let topics = ($repo.topics | str join " " | str downcase)
     let keyword_match = $ai_keywords | any { |kw| ($text | str contains $kw) or ($topics | str contains $kw) }
     let ai_word_match = ($text =~ '\bai\b') or ($topics =~ '\bai\b')
-    not ($keyword_match or $ai_word_match)
+    let primary_lang = ($repo.language? | default "" | str downcase)
+    not ($keyword_match or $ai_word_match) and ($primary_lang == "shell")
 }
 
 mkdir $"data/($language)"
