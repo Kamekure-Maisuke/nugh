@@ -33,7 +33,7 @@ jobs:
             <(cut -f2 data/members_nogi.tsv | sudachipy | grep '姓' | cut -f1 | shuf | \
               head -n $(cut -f2 data/members_nogi.tsv | sudachipy | grep '人名,名' | cut -f1 | wc -l)) \
             <(cut -f2 data/members_nogi.tsv | sudachipy | grep '人名,名' | cut -f1 | shuf) | \
-          head -n 10 > "data/members_nogi_random_$(date '+%Y%m%d')"
+          head -n 10 > "data/nogi/members_nogi_random_$(date '+%Y%m%d')"
       - name: setting git
         run: |
           git config --local user.email ${{ secrets.EMAIL }}
